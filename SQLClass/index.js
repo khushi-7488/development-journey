@@ -37,6 +37,20 @@ app.get("/", (req, res) => {
 
 })
 
+app.get("/user",(req,res)=>{
+  let q = `SELECT * FROM user`;
+  try{
+    connection.query(q,(err,result)=>{
+      if(err) throw err;
+    res.render("show.ejs",{result});
+
+    })
+  }
+  catch(err){
+    console.log(err);
+  }
+})
+
 app.listen("8080", () => {
   console.log("server is listening");
 })
