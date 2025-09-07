@@ -1,0 +1,23 @@
+{
+  "name": "sigma",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khushi-7488/development-journey.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khushi-7488/development-journey/issues"
+  },
+  "homepage": "https://github.com/khushi-7488/development-journey#readme",
+  "description": "",
+  "dependencies": {
+    "@faker-js/faker": "^10.0.0"
+  }
+}
