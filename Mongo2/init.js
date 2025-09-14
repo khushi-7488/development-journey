@@ -1,5 +1,7 @@
 const mongoose = require("mongoose")
 const chat = require("./models/chat.js")
+const ExpressError = require("./ExpressError");
+
 
 
 main().then((res) => {
@@ -9,7 +11,7 @@ main().then((res) => {
 
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/whatsapp');
+    await mongoose.connect('mongodb://127.0.0.1:27017/fakewhatsapp');
 }
 
 let allchats = [

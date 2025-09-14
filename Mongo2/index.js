@@ -3,7 +3,8 @@ const app = express();
 const mongoose = require("mongoose")
 const path = require("path");
 const chat = require("./models/chat.js")
-const methodOverride = require("method-override")
+const methodOverride = require("method-override");
+const ExpressError = require("./ExpressError.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -18,7 +19,7 @@ main().then((res) => {
 
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/whatsapp');
+    await mongoose.connect('mongodb://127.0.0.1:27017/fakewhatsapp');
 }
 
 app.get("/chats", async (req, res) => {
@@ -26,7 +27,9 @@ app.get("/chats", async (req, res) => {
     res.render("index.ejs", { chats })
 })
 
+// new route 
 app.get("/chats/new", (req, res) => {
+    throw new ExpressError(404, "ppage not found")
     res.render("new.ejs")
 })
 
@@ -41,6 +44,17 @@ app.post("/chats", (req, res) => {
     })
     newChat.save().then(res => { console.log("chat was saved") }).catch(err => { console.log(err) })
     res.redirect("/chats");
+})
+
+// show route 
+app.get("/chats/:id", async (req, res, next) => {
+    let { id } = req.params;
+    let chats = await chat.findById(id);
+    if(!chats){
+       return next(new ExpressError(404, "chat not found"))
+    }
+
+    res.render("edit.ejs", { chats })
 })
 
 // edit route 
@@ -72,6 +86,11 @@ app.get("/", (req, res) => {
     res.send("root is working");
 })
 
+// error handling
+app.use((err, req, res, next) => {
+    let { status = 500, message = "sone error" } = err;
+    res.status(status).send(message);
+})
 app.listen(8080, () => {
     console.log("listening")
 })
