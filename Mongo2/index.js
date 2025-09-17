@@ -29,12 +29,12 @@ app.get("/chats", async (req, res) => {
 
 // new route 
 app.get("/chats/new", (req, res) => {
-    throw new ExpressError(404, "ppage not found")
+    // throw new ExpressError(404, "ppage not found")
     res.render("new.ejs")
 })
 
 //  create route
-app.post("/chats", (req, res) => {
+app.post("/chats", asyncWrap(async (req, res, next) => {
     let { from, to, msg } = req.body;
     let newChat = new chat({
         from: from,
@@ -42,48 +42,78 @@ app.post("/chats", (req, res) => {
         msg: msg,
         created_at: new Date()
     })
-    newChat.save().then(res => { console.log("chat was saved") }).catch(err => { console.log(err) })
+    await newChat.save();
     res.redirect("/chats");
-})
+}
+))
 
 // show route 
-app.get("/chats/:id", async (req, res, next) => {
+function asyncWrap(fn) {
+    return function (req, res, next) {
+        fn(req, res, next).catch((err) => next(err));
+    }
+}
+
+app.get("/chats/:id", asyncWrap(async (req, res, next) => {
     let { id } = req.params;
+    // if (!mongoose.isValidObjectId(id)) {
+    //     return next(new ExpressError(404, "chat id not found"));
+    // }
     let chats = await chat.findById(id);
-    if(!chats){
-       return next(new ExpressError(404, "chat not found"))
+    if (!chats) {
+        return next(new ExpressError(404, "chat not found"))
     }
 
     res.render("edit.ejs", { chats })
-})
+}))
 
 // edit route 
-app.get("/chats/:id/edit", async (req, res) => {
+app.get("/chats/:id/edit", asyncWrap(async (req, res, next) => {
+
+
     let { id } = req.params;
     let chats = await chat.findById(id);
     res.render("edit.ejs", { chats })
-})
+}
+))
 
 // update route
-app.put("/chats/:id", async (req, res) => {
+app.put("/chats/:id", asyncWrap(async (req, res, next) => {
     let { id } = req.params;
     let { msg: newMsg } = req.body;
     let updateChat = await chat.findByIdAndUpdate(id, { msg: newMsg }, { runValidators: true, new: true }
     );
     console.log(updateChat);
     res.redirect("/chats")
-})
+}
+))
 
 // delete route
-app.delete("/chats/:id", async (req, res) => {
-    let { id } = req.params;
-    let deleted = await chat.findByIdAndDelete(id);
-    console.log(deleted);
-    res.redirect("/chats")
-})
+app.delete("/chats/:id", asyncWrap(async (req, res, next) => {
+        let { id } = req.params;
+        let deleted = await chat.findByIdAndDelete(id);
+        console.log(deleted);
+        res.redirect("/chats")
+    } 
+))
 
 app.get("/", (req, res) => {
     res.send("root is working");
+})
+
+const handleValidationErr = (err) =>{
+    console.log("this is validation error");
+    console.dir(err);
+    return err;
+
+}
+
+app.use((err, req, res, next)=>{
+    console.log(err.name)
+    if(err.name==="ValidationError"){
+        err = handleValidationErr();
+    }
+    next(err);
 })
 
 // error handling
