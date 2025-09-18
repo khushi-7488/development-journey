@@ -24,15 +24,48 @@ const customerSchema = new Schema({
     ]
 })
 
+customerSchema.pre("findOneAndDelete", async () =>{
+    console.log("Pre middlewares")
+})
+customerSchema.post("findOneAndDelete", async () =>{
+    console.log("Pre middlewares")
+})
+
 const Order = mongoose.model("Order", orderSchema);
 const Customer = mongoose.model("Customer", customerSchema);
 
-const findCustomer = async ()=>{
+const findCustomer = async () => {
     let result = await Customer.find({}).populate("orders");
     console.log(result[0]);
 }
 
-findCustomer();
+const addCust = async () => {
+    let newCust = new Customer({
+        name: "karan"
+    })
+    let newOrder = new Order({
+        item: "pizza",
+        price: 250
+    })
+    newCust.orders.push(newOrder);
+
+    await newOrder.save();
+    await newCust.save();
+
+    console.log("added new customer");
+}
+
+const delCust =async () =>{
+    let data = await Customer.findByIdAndDelete("68ca81405904959f3cd8213f");
+ console.log(data)
+}
+
+delCust();
+
+
+// addCust();
+
+// findCustomer();
 // const addCustomers = async () => {
 //     let cus1 = new Customer({
 //         name: "rahul kumar",
