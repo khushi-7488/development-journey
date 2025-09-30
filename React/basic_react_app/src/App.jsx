@@ -1,14 +1,15 @@
-import "./App.css"
-import Title from "./Title.jsx";
+import "./App.css";
 import ProductTab from "./ProductTab.jsx";
-
+import Button from "./Button.jsx";
 
 function App() {
   return (
     <div>
-    <ProductTab/>
+      <h2>Blockbuster deal</h2>
+      <ProductTab />
+      <Button/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
