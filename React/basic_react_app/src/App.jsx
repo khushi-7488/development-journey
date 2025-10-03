@@ -3,6 +3,7 @@ import ProductTab from "./ProductTab.jsx";
 import Button from "./Button.jsx";
 import Form from "./Form.jsx";
 import Counter from "./Counter.jsx";
+import LikeButton from "./LikeButton.jsx";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Button/>
       <Form/>
       <Counter/>
+      <LikeButton/>
     </div>
   );
 }
