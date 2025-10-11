@@ -6,9 +6,9 @@ function genTicket(n) {
     return arr;
 }
 
-// function sum(arr) {
-//     return arr.reduce((sum, curr) => sum + curr, 0);
-// }
+function sum(arr) {
+    return arr.reduce((sum, curr) => sum + curr, 0);
+}
 
 function celebrate() {
     confetti({
