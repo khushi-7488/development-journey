@@ -3,13 +3,13 @@ import Ludo from './Ludo'
 import TodoList from './TodoList';
 import Lottery from './Lottery';
 import Ticket from './Ticket';
+import TicketNum from './TIcketNum';
 
 function App() {
 
   return (
     <>
-    <Ticket ticket = {[0, 1,2]}/>
-    <Ticket ticket = {[0, 1,2,5,5]}/>
+    <Lottery n={3} winningSum={15}/>
     </>
   )
 }
